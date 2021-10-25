@@ -125,8 +125,9 @@ class Tx:
         outputs = []
         for _ in range(num_outputs):
             outputs.append(TxOut.parse(s))
+        locktime = little_endian_to_int(s.read(4))
 
-        return cls(version, inputs, outputs, None, testnet = testnet)
+        return cls(version, inputs, outputs, locktime, testnet = testnet)
         
 
     # tag::source6[]
@@ -238,7 +239,7 @@ class TxOut:
         # return an instance of the class (see __init__ for args)
         amount = little_endian_to_int(s.read(8))
         script_pubkey = Script.parse(s)
-        
+
         return cls (amount, script_pubkey)
 
     # tag::source4[]
