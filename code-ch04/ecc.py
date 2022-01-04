@@ -618,7 +618,7 @@ class PrivateKey:
 
     def __init__(self, secret):
         self.secret = secret
-        self.point = secret * G
+        self.point = secret * G # point becomes S256Point by multiplying by G
 
     def hex(self):
         return '{:x}'.format(self.secret).zfill(64)
