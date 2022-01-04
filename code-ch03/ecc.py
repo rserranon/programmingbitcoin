@@ -3,7 +3,10 @@ from unittest import TestCase
 
 import hashlib
 import hmac
+import logging
 
+
+logging.basicConfig(filename='ecc.log',level = logging.DEBUG )
 
 class FieldElement:
 
@@ -167,6 +170,7 @@ class Point:
             raise TypeError('Points {}, {} are not on the same curve'.format(self, other))
         # Case 0.0: self is the point at infinity, return other
         if self.x is None:
+            print('case None')
             return other
         # Case 0.1: other is the point at infinity, return self
         if other.x is None:
@@ -175,6 +179,7 @@ class Point:
         # Case 1: self.x == other.x, self.y != other.y
         # Result is point at infinity
         if self.x == other.x and self.y != other.y:
+            print('case self.x == other.x')
             return self.__class__(None, None, self.a, self.b)
 
         # Case 2: self.x ≠ other.x
@@ -183,6 +188,7 @@ class Point:
         # x3=s**2-x1-x2
         # y3=s*(x1-x3)-y1
         if self.x != other.x:
+            print('self.x ≠ other.x')
             s = (other.y - self.y) / (other.x - self.x)
             x = s**2 - self.x - other.x
             y = s * (self.x - x) - self.y
@@ -193,6 +199,7 @@ class Point:
         # note instead of figuring out what 0 is for each type
         # we just use 0 * self.x
         if self == other and self.y == 0 * self.x:
+            print('Case point at infinity')
             return self.__class__(None, None, self.a, self.b)
 
         # Case 3: self == other
@@ -201,6 +208,7 @@ class Point:
         # x3=s**2-2*x1
         # y3=s*(x1-x3)-y1
         if self == other:
+            print('Case self == other')
             s = (3 * self.x**2 + self.a) / (2 * self.y)
             x = s**2 - 2 * self.x
             y = s * (self.x - x) - self.y
@@ -210,12 +218,15 @@ class Point:
     def __rmul__(self, coefficient):
         coef = coefficient
         current = self  # <1>
+        logging.debug("coeficient {0}".format( coefficient ))
+        logging.debug("self {0}".format( self ))
         result = self.__class__(None, None, self.a, self.b)  # <2>
         while coef:
             if coef & 1:  # <3>
                 result += current
             current += current  # <4>
             coef >>= 1  # <5>
+            logging.debug("coef {0}".format( coef ))
         return result
     # end::source3[]
 
@@ -282,18 +293,28 @@ class ECCTest(TestCase):
         a = FieldElement(0, prime)
         b = FieldElement(7, prime)
 
+        # (x1, y1, x2, y2, x3, y3)
         additions = (
-            # (x1, y1, x2, y2, x3, y3)
-            (192, 105, 17, 56, 170, 142),
-            (47, 71, 117, 141, 60, 139),
-            (143, 98, 76, 66, 47, 71),
+            (170,142, 60,139,220,181),
+            ( 47, 71, 17, 56,215, 68)
         )
 
         # loop over additions
         # initialize x's and y's as FieldElements
         # create p1, p2 and p3 as Points
         # check p1+p2==p3
-        raise NotImplementedError
+        
+        for x1_raw, y1_raw, x2_raw, y2_raw, x3_raw, y3_raw in additions:
+            x1 = FieldElement(x1_raw, prime)
+            y1 = FieldElement(y1_raw, prime)
+            p1 = Point( x1, y1, a, b)
+            x2 = FieldElement(x2_raw, prime)
+            y2 = FieldElement(y2_raw, prime)
+            p2 = Point( x2, y2, a, b)
+            x3 = FieldElement(x3_raw, prime)
+            y3 = FieldElement(y3_raw, prime)
+            p3 = Point( x3, y3, a, b)
+            self.assertEqual( p1 + p2, p3)
 
     def test_rmul(self):
         # tests the following scalar multiplications
