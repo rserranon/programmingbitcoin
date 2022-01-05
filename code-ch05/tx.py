@@ -121,6 +121,7 @@ class Tx:
         inputs = []
         for _ in range(num_inputs):
             inputs.append(TxIn.parse(s))
+            
         num_outputs = read_varint(s)
         outputs = []
         for _ in range(num_outputs):

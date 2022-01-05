@@ -44,7 +44,10 @@ bc8023693ad4e9527dc42c34210f7a7d1d1ddfc8492b654a11e7620a0012102158b46fbdff65d0\
 b6dbf67d4750b0a56244948a87988ac005a6202000000001976a9143c82d7df364eb6c75be8c80\
 df2b3eda8db57397088ac46430600'
 stream = BytesIO(bytes.fromhex(hex_transaction))
-tx_obj = Tx.parse(stream)
+
+with open("block.dat", "rb") as blockStream:
+    tx_obj = Tx.parse(blockStream) # parse works with fileStrams
+
 print(tx_obj.tx_ins[1].script_sig)
 # 304402207899531a52d59a6de200179928ca900254a36b8dff8bb75f5f5d71b1cdc26125022008\
 # b422690b8461cb52c3cc30330b23d574351872b7c361e9aae3649071c1a71601 035d5c93d9ac9\
