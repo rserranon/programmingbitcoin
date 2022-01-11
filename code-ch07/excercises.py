@@ -8,3 +8,4 @@ import script
 
 reload(tx)
 run(tx.TxTest("test_sig_hash"))
+

@@ -46,7 +46,7 @@ df2b3eda8db57397088ac46430600'
 stream = BytesIO(bytes.fromhex(hex_transaction))
 
 with open("block.dat", "rb") as blockStream:
-    tx_obj = Tx.parse(blockStream) # parse works with fileStrams
+    tx_obj = Tx.parse(blockStream) # parse function works with fileStreams
 
 print(tx_obj.tx_ins[1].script_sig)
 # 304402207899531a52d59a6de200179928ca900254a36b8dff8bb75f5f5d71b1cdc26125022008\

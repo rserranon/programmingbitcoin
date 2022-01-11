@@ -1,6 +1,10 @@
 import hashlib
+import logging
 
 from unittest import TestCase
+
+logging.basicConfig(filename='op.log',level = logging.DEBUG )
+
 
 from ecc import (
     S256Point,
@@ -676,7 +680,7 @@ def op_checksig(stack, z):
     if len(stack) < 2:
         return False
     sec_pubkey = stack.pop()
-    der_signature = stack.pop()[:-1]
+    der_signature = stack.pop()[:-1] # take off the last byte since it's the hash type
     try:
         point = S256Point.parse(sec_pubkey)
         sig = Signature.parse(der_signature)

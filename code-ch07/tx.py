@@ -102,7 +102,7 @@ class Tx:
         return hash256(self.serialize())[::-1]
 
     @classmethod
-    def parse(cls, s, testnet=False):
+    def     parse(cls, s, testnet=False):
         '''Takes a byte stream and parses the transaction at the start
         return a Tx object
         '''
