@@ -1,7 +1,6 @@
 
 from io import BytesIO
 from unittest import TestCase
-from block import Block
 
 
 # import everything and define a test runner function
@@ -72,3 +71,25 @@ print(new_bits.hex())
 
 reload(helper)
 run(helper.HelperTest("test_calculate_new_bits"))
+
+from BlockFile import BlockFile
+from tx import Tx
+import os
+
+cur_path = os.path.dirname(__file__)
+
+with open(cur_path + '/' + 'blk00001.dat', "rb") as blockStream:
+    blk_obj = BlockFile.parse (blockStream) # parse function works with fileStreams
+    print('block_size: {}'.format(blk_obj.block_size))
+    print('tx_count: {}'.format(blk_obj.tx_count))
+    print(blk_obj.block_header.hash().hex())
+    print('000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f')
+
+    for tx in range (1, blk_obj.tx_count + 1):
+        tx_obj = Tx.parse(blockStream)
+        print(repr(tx_obj))
+
+# Create parser for coinbase transaction
+# Create a test to validate number of transactions = 1 on genesis block
+# Create a test to validate hash() equal to the genesis block hash
+# 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f
