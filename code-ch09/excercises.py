@@ -87,6 +87,9 @@ with open(cur_path + '/' + 'blk00001.dat', "rb") as blockStream:
 
     for tx in range (1, blk_obj.tx_count + 1):
         tx_obj = Tx.parse(blockStream)
+        if not tx_obj.is_coinbase():
+             if tx_obj.verify():  # verify transaction if it's not a coinbase Tx
+                 print('Transaction: {} verified!'.format(tx_obj.hash().hex()))
         print(repr(tx_obj))
 
 # Create parser for coinbase transaction
